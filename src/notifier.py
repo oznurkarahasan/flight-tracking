@@ -3,23 +3,30 @@ from email.message import EmailMessage
 from src.config import Config
 
 class EmailNotifier:
-    def send_alert(self, origin, dest, date, new_price, old_price):
+    def send_bulk_alert(self, deals):
+        if not deals:
+            return
+
         msg = EmailMessage()
-        subject = f"Fiyat Düştü! {origin} -> {dest}"
-        body = (f"Uçuş Tarihi: {date}\n"
-                f"Yeni Fiyat: {new_price} TRY\n"
-                f"Eski Fiyat: {old_price if old_price else 'Bilinmiyor'} TRY\n"
-                f"Acele etsen iyi olur!")
-        
-        msg.set_content(body)
-        msg['Subject'] = subject
+        msg['Subject'] = f"Uçuş Fırsatları Bülteni ({len(deals)} Yeni Düşüş)"
         msg['From'] = Config.EMAIL_ADDRESS
         msg['To'] = Config.EMAIL_ADDRESS
+
+        body = "Aşağıdaki uçuşlarda fiyat düşüşü saptandı:\n\n"
+        for deal in deals:
+            old_p = deal['old'] if deal['old'] else "İlk Kayıt"
+            body += f"{deal['origin']} -> AMS\n"
+            body += f"Tarih: {deal['date']}\n"
+            body += f"Yeni Fiyat: {deal['new']} TRY (Eski: {old_p} TRY)\n"
+            body += "-" * 30 + "\n"
+
+        body += "\nBu bülten flight-tracking sistemi tarafından otomatik oluşturulmuştur."
+        msg.set_content(body)
 
         try:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
                 smtp.login(Config.EMAIL_ADDRESS, Config.EMAIL_PASSWORD)
                 smtp.send_message(msg)
-            print(f"Mail başarıyla gönderildi: {origin} -> {dest}")
+            print(f"Özet mail {len(deals)} fırsat ile gönderildi.")
         except Exception as e:
-            print(f"Mail gönderme hatası: {e}")
+            print(f"Mail hatası: {e}")
