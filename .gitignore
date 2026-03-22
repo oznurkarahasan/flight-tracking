@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 venv/
+ENV/
+env/
 .env
 
 .dockerignore
@@ -9,3 +11,5 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+
+data/price_history.json
