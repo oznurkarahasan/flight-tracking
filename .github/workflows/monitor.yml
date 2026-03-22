@@ -35,8 +35,8 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git pull --rebase origin main
           mkdir -p data
           git add data/price_history.json
           git commit -m "Update flight prices [skip ci]" || echo "No changes to commit"
+          git pull --rebase origin main
           git push
