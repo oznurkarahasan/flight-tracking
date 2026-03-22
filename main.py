@@ -23,11 +23,11 @@ def main():
     found_deals = []
 
     all_dates = []
-    if hasattr(Config, 'DATE_RANGES'):
-        for start, end in Config.DATE_RANGES:
-            all_dates.extend(get_date_list(start, end))
-    else:
-        all_dates = Config.TARGET_DATES
+    for item in Config.DATE_RANGES:
+        if isinstance(item, tuple):
+            all_dates.extend(get_date_list(item[0], item[1]))
+        else:
+            all_dates.append(item)
 
     for origin in Config.ORIGINS:
         for date in all_dates:
