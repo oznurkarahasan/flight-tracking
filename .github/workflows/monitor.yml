@@ -29,7 +29,7 @@ jobs:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           PYTHONPATH: src
-        run: python src/main.py
+        run: python3 main.py
 
       - name: Commit Updated Prices
         run: |

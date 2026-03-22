@@ -9,4 +9,4 @@ COPY . .
 
 ENV PYTHONPATH=/app
 
-CMD ["python", "src/main.py"]
+CMD ["python", "main.py"]
